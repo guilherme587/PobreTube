@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Home</title>
+</head>
+<body>
+    <div style="margin-bottom: 150px;" class="container">
+        <div class="row justify-content-start">
+            <a style="border-color: rgba(240, 248, 255, 0); text-decoration: none; color: black;" class="d-flex col-4" href="{% url 'home' %}" type="button" id="button-addon2"></body>
+                <img style="width: 80px;" class="align-self-start align-self-center" src="{% static '/img/PoorTube_tranparente.png' %}" title="PobreTube">
+                <h1 style="font-size: 50px;" class="align-self-start align-self-center">PobreTube</h1>
+            </a>
+            <div class="align-self-center text-end col-5">
+                <form id="form_busca" action="{% url 'busca' %}" class="d-flex flex-row align-items-start" method="post">
+                    {% csrf_token %}
+                    <input style="width: 50dvh;" name="url_video" type="text" class="form-control" placeholder="https://youtu.be/..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <img style="width: 25px;" src="{% static 'img/procurar.svg' %}">
+                    </button>
+                </form>
+            </div>
+            <div style="gap: 5px;" class="d-flex col-3 justify-content-end">
+                <h3 class="align-self-end align-self-center">#{{user}}</h3>
+                <a class="btn btn-outline-secondary align-self-end align-self-center" href="{% url 'logout' %}" type="submit" id="button-addon2">
+                    <img style="width: 25px;" src="{% static 'img/deixar.svg' %}">
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <main class="container">
+        <div class="container-fluid">
+            <div style="gap: 5px;" class="d-flex flex-row align-items-start justify-content-end">
+                <img style="width: 30px;" src="{% static 'img/pasta.svg' %}">
+                <p style="font-size: 22px; font-weight: bolder;" class="align-self-center">{{usuario_espaco.0}}/{{usuario_espaco.1}}(mb)</p>
+                {% if porcentagem_amazenamento <= 50 %}
+                    <p style="color: greenyellow;" class="align-self-end">{{porcentagem_amazenamento}}%</p>
+                {% elif porcentagem_amazenamento >= 50 and porcentagem_amazenamento <= 70 %}
+                    <p style="color: gray;" class="align-self-end">{{porcentagem_amazenamento}}%</p>
+                {% else %}
+                    <p style="color: red;" class="align-self-end">{{porcentagem_amazenamento}}%</p>
+                {% endif %}
+            </div>
+            {% for arquivo in audios %}
+              <div style="margin-bottom: 25px;" class="row">
+                <h4>{{arquivo}}</h4>
+                <div style="gap: 5px;" class="d-flex justify-content-between">
+                    <audio id="{{arquivo}}" controls class="col">
+                        <source src="{% static caminho|add:arquivo %}" type="audio/mpeg">
+                        Seu navegador não suporta a tag de áudio.
+                    </audio>
+                    <a style="border-radius: 50%; padding: 10px" class="btn btn-primary align-self-center" href="{% static caminho|add:arquivo %}" download="{% static caminho|add:arquivo %}"></body>
+                        <img style="width: 25px;" src="{% static 'img/download.svg' %}">
+                    </a>
+                    <a style="border-radius: 50%; padding: 10px" class="btn btn-danger align-self-center" onclick="excluir_download('{{arquivo}}', '{{arquivo}}')" id="button-addon2"></body>
+                        <img style="width: 25px;" src="{% static 'img/lixo.svg' %}">
+                    </a>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+    </main>
+    <script>
+        function excluir_download(elemento, nome_download) {
+            document.getElementById(elemento).src = ''
+            var url = "/tubepobre/home/excluir_download/" + encodeURIComponent(nome_download) + "/";
+            window.location.href = url
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
